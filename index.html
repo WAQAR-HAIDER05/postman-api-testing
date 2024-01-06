@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API-DATA</title>
+</head>
+<body>
+    <table id="data-table" border="1">
+        <thead>
+            <tr>
+                <th>Nation</th>
+                <th>Population</th>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+
+        fetch("https://datausa.io/api/data?drilldowns=Nation&measures=Population", requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                
+                const tableBody = document.querySelector('#data-table tbody');
+                data.data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.Nation}</td>
+                        <td>${item.Population}</td>
+                        <td>${item.Year}</td>
+                        
+                    `;
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.log('error', error));
+    </script>
+</body>
+</html>

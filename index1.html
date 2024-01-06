@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="news-container">  </div>
+    <script>
+        const apikey = 'd6f69fce789e45a985185851db31de41';
+        const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${apikey}`;
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+
+        fetch(apiUrl, requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                const newsContainer = document.getElementById('news-container');
+
+                if (data.articles && data.articles.length > 0) {
+                    const articles = data.articles;
+                    const newsHTML = articles.map(article => {
+                        return `
+                            <div>
+                                <h2>${article.title}</h2>
+                                <p>${article.description}</p>
+                                <img src="${article.urlToImage}" alt="${article.title}" style="max-width: 100%; height: auto;">
+                                <p>Published at: ${article.publishedAt}</p>
+                                <a href="${article.url}" target="_blank">Read more</a>
+                            </div>
+                        `;
+                    }).join('');
+
+                    newsContainer.innerHTML = newsHTML;
+                } else {
+                    newsContainer.innerHTML = '<p>No news available</p>';
+                }
+            })
+            .catch(error => console.log('Error fetching news:', error));
+    </script>
+</body>
+</html>
